@@ -12,7 +12,7 @@ else:
         db_url = db_url.replace("postgres://", "postgresql://", 1)
     
     engine = create_engine(db_url)
-    NUMBER_OF_SEATS = 194 # 現在の総座席数
+    NUMBER_OF_SEATS = 320 # 現在の総座席数
 
     with engine.connect() as conn:
         conn.execute(text('DROP TABLE IF EXISTS seats'))
