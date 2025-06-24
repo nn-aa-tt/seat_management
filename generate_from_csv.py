@@ -1,15 +1,14 @@
 import csv
 import os
 
-# --- 設定 ---
+
 CSV_FILENAME = "layout.csv"
 OUTPUT_FILENAME = "templates/seatmap.svg"
 
-# --- 見た目の調整 ---
-# CELL_SIZEが座席間のスペースを決めます。SEAT_SIZEより大きい必要があります。
-CELL_SIZE = 50       # 1マスあたりのサイズ（この値を大きくすると座席間が広がる）
-SEAT_SIZE = 35       # 描画される座席（四角形）のサイズ
-PADDING = 50         # SVG全体の余白
+
+CELL_SIZE = 50      
+SEAT_SIZE = 35       
+PADDING = 50      
 
 def generate_svg_from_csv():
     """CSVファイルから座席情報を読み込み、間隔を空けてSVGファイルを生成する"""
@@ -17,18 +16,16 @@ def generate_svg_from_csv():
     
     try:
         with open(CSV_FILENAME, mode='r', encoding='utf-8') as f:
-            # CSVにヘッダー行（id, x, y など）があれば、この行で読み飛ばす
             try:
                 next(f)
             except StopIteration:
-                pass # 空ファイルの場合は何もしない
-            
+                pass 
             reader = csv.reader(f)
             for row in reader:
                 if not row: continue
                 try:
                     seat_id = int(row[0])
-                    # CSVの値は「グリッド上の位置」として読み込む
+                   
                     grid_x = int(row[1])
                     grid_y = int(row[2])
                     seats.append({'id': seat_id, 'grid_x': grid_x, 'grid_y': grid_y})
@@ -43,7 +40,6 @@ def generate_svg_from_csv():
         print("エラー: CSVから座席データを読み込めませんでした。")
         return 0
 
-    # グリッドの最大値からSVG全体のサイズを計算
     max_grid_x = max(s['grid_x'] for s in seats)
     max_grid_y = max(s['grid_y'] for s in seats)
     canvas_width = (max_grid_x * CELL_SIZE) + PADDING * 2
@@ -53,8 +49,7 @@ def generate_svg_from_csv():
     for seat in seats:
         seat_id = seat['id']
         
-        # --- 【ここが修正点】 ---
-        # グリッド座標を、間隔を考慮したピクセル座標に変換
+      
         svg_x = seat['grid_x'] * CELL_SIZE
         svg_y = seat['grid_y'] * CELL_SIZE
         
@@ -70,7 +65,6 @@ def generate_svg_from_csv():
         )
         svg_elements.append(svg_element_string)
 
-    # SVGファイルに書き込み
     svg_header = f'<svg width="{canvas_width}" height="{canvas_height}" xmlns="http://www.w3.org/2000/svg">\n<g transform="translate({PADDING}, {PADDING})">\n'
     svg_footer = '\n</g>\n</svg>'
     
