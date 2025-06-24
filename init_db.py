@@ -1,18 +1,16 @@
 import os
 from sqlalchemy import create_engine, text
 
-# RenderのDATABASE_URLを環境変数から読み込む
 db_url = os.environ.get('DATABASE_URL')
 
 if not db_url:
     print("エラー: 環境変数 DATABASE_URL が設定されていません。")
-    print("例: export DATABASE_URL='postgres://...'")
 else:
     if db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql://", 1)
     
     engine = create_engine(db_url)
-    NUMBER_OF_SEATS = 320 # 現在の総座席数
+    NUMBER_OF_SEATS = 320 # 総座席数
 
     with engine.connect() as conn:
         conn.execute(text('DROP TABLE IF EXISTS seats'))
