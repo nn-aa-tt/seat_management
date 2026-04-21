@@ -67,7 +67,7 @@ def index():
 
 @app.route('/seat/<int:seat_id>')
 def take_seat(seat_id):
-    """QRコードからアクセスされ、席を「使用中」にする"""
+    """Q席を「使用中」にする"""
     with engine.connect() as conn:
         conn.execute(text(
             "UPDATE seats SET status = :status, timestamp = :timestamp WHERE id = :id"
@@ -111,7 +111,7 @@ def admin_dashboard():
 @app.route('/admin/update/<int:seat_id>/<string:new_status>')
 @login_required
 def admin_update_status(seat_id, new_status):
-    """管理者が手動で座席ステータスを更新する"""
+    """手動で座席ステータスを更新する"""
     with engine.connect() as conn:
         if new_status == 'available':
             conn.execute(text(
